@@ -1,0 +1,57 @@
+{
+    "LEDs": {
+        "0": {
+            "StatusLed": "RED",
+            "RecLedOn": true
+        },
+        "1": {
+            "StatusLed": "GREEN",
+            "RecLedOn": false
+        }
+    },
+    "network": {
+        "IPv4": "192.168.5.24",
+        "IPv6": "3001:0db8:85a3:0000:0000:8a2e:0370:7334"
+    },
+    "system": {
+        "FWVersion": "0.0.0.1",
+        "Time": "2024-08-22T15:00:02.574UTC+08:00",
+        "serialNo": "WMXNF222G2X0",
+        "SKUName": "CA-NF22G2",
+        "deviceName": "WMXNF222G2X0",
+        "MAC": "02:00:01:00:01:7B"
+    },
+    "video": {
+        "0": {
+            "resolution": "1920x1080",
+            "streamFormat": "H.264",
+            "bitRate": 5000,
+            "type": "VBR"
+        },
+        "1": {
+            "resolution": "1280x720",
+            "streamFormat": "H.264",
+            "bitRate": 3000,
+            "type": "VBR"
+        }
+    },
+    "watermark": {
+        "0": {
+            "username": "DefaultUser",
+            "optionUserName": true,
+            "optionDeviceName": true,
+            "optionGPS": true,
+            "optionTime": true,
+            "optionLogo": true
+        },
+        "1": {
+            "username": "DefaultUser",
+            "optionUserName": true,
+            "optionDeviceName": true,
+            "optionGPS": true,
+            "optionTime": true,
+            "optionLogo": true
+        }
+    },
+    "dayNightMode": "day"
+}

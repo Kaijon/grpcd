@@ -1,0 +1,20 @@
+FROM golang:1.21
+
+RUN apt-get update && apt-get install unzip nano vim -y
+RUN wget -q -O protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.12.0/protoc-3.12.0-linux-x86_64.zip && unzip protoc.zip
+RUN mv /go/bin/protoc /usr/local/bin/protoc && rm protoc.zip
+
+ENV GO111MODULE=on
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+ENV PATH="$PATH:$(go env GOPATH)/bin"
+
+WORKDIR /go/src/app
+
+# 初始化 Go 模組並下載依賴項
+RUN go mod init && go mod tidy
+
+#docker build -t golang:10235667 -f Dockerfile.10235667 .
+#docker run -d --name goenv  -v $(pwd):/go/src/app -w /go/src/app golang:10235667 sh -c 'protoc --go_out=. --go-grpc_out=. *.proto'
+#docker run -d -v $(pwd):/go/src/app -w /go/src/app golang:10235667 sh -c 'protoc --go_out=/usr/local/go/src --go-grpc_out=/usr/local/go/src *.proto && go build -o app && ./app'
+#docker run -it --name goenv -v $(pwd):/go/src/app -w /go/src/app -p 50051:50051 golang:10235667 sh -c 'cp -r canf22g2 /usr/local/go/src && ./prebuild_pkg.sh && go build -o app && ./app'

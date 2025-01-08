@@ -1,0 +1,38 @@
+# 使用官方 Golang 映像，你可以選擇一個合適的標籤，比如基於 Debian Buster 的版本
+FROM golang:buster
+
+# 安裝 Node.js
+RUN apt-get update && apt-get install -y curl unzip nano \
+    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# 下載並安裝 protoc
+RUN wget -q -O protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.12.0/protoc-3.12.0-linux-x86_64.zip \
+    && unzip protoc.zip \
+    && mv bin/protoc /usr/local/bin/protoc \
+    && rm -rf protoc.zip include
+
+# 設置 Go 環境變量
+ENV GO111MODULE=on
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest \
+    && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+ENV PATH="$PATH:$(go env GOPATH)/bin"
+
+# 手動下載並安裝 protoc-gen-js
+RUN wget -q -O protobuf-javascript.zip https://github.com/protocolbuffers/protobuf-javascript/releases/download/v3.21.2/protobuf-javascript-3.21.2-linux-x86_64.zip \
+    && unzip protobuf-javascript.zip -d /usr/local/bin/protoc-gen-js \
+    && chmod +x /usr/local/bin/protoc-gen-js/bin/protoc-gen-js \
+    && rm protobuf-javascript.zip
+
+# 將 protoc-gen-js 添加到 PATH
+ENV PATH="/usr/local/bin/protoc-gen-js/bin:${PATH}"
+
+# 下載並安裝 protoc-gen-grpc-web
+RUN wget -q -O /usr/local/bin/protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/download/1.2.1/protoc-gen-grpc-web-1.2.1-linux-x86_64 \
+    && chmod +x /usr/local/bin/protoc-gen-grpc-web
+
+WORKDIR /go/src/app
+
+# 初始化 Go 模組並下載依賴項
+RUN go mod init && go mod tidy
